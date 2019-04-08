@@ -11,5 +11,6 @@ Currently, the complete Encoder and the Upper branch of decoder (Ground Truth) h
 # TODO
 - The lower branch (VAE part) of the decoder
 - The custom loss function that the author used. (L = L<sub>dice</sub> + 0.1 ∗ L<sub>L2</sub> + 0.1 ∗ L<sub>KL</sub> )
-I will soon modularize the code and create a single python script with a fully customizable keras model.
+
+Also, I will soon modularize the code and create a single python script with a fully customizable keras model.
 
