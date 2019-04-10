@@ -9,7 +9,6 @@ Implementation of the paper titled 3D MRI brain tumor segmentation using autoenc
 Currently, the complete Encoder and the Upper branch of decoder (Ground Truth) have been implemented completely. View the current implementation here: [NVDLMED_Implementation.ipynb](NVDLMED_Implementation.ipynb)
 
 # TODO
-- The lower branch (VAE part) of the decoder
 - The custom loss function that the author used. (L = L<sub>dice</sub> + 0.1 ∗ L<sub>L2</sub> + 0.1 ∗ L<sub>KL</sub> )
 - Modularize the code and make the model available for customization
 
