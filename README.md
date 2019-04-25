@@ -4,7 +4,7 @@
 
 ![The model architecture](https://www.suyogjadhav.com/images/misc/brats2018_sota_model.png)
 <center><b>The Model Architecture</b><br />Source: https://arxiv.org/pdf/1810.11654.pdf</center>
-<br />
+<br /><br />
 Implementation of the paper titled 3D MRI brain tumor segmentation using autoencoder regularization by Myronenko (https://arxiv.org/abs/1810.11654). The author (team name: **NVDLMED**) was ranked #1 on the [BRATS 2018](https://www.med.upenn.edu/sbia/brats2018/) leaderboard.
 
 # Progress
