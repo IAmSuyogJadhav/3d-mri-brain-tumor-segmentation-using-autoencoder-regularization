@@ -8,7 +8,8 @@
 Implementation of the paper titled 3D MRI brain tumor segmentation using autoencoder regularization by Myronenko (https://arxiv.org/abs/1810.11654). The author (team name: **NVDLMED**) was ranked #1 on the [BRATS 2018](https://www.med.upenn.edu/sbia/brats2018/) leaderboard.
 
 # Progress
-Currently, the complete Encoder and the Upper branch of decoder (Ground Truth) have been implemented completely. View the current implementation here: [NVDLMED_Implementation.ipynb](NVDLMED_Implementation.ipynb)
+The model has been completely implemented. View the current implementation here: [NVDLMED_Implementation.ipynb](NVDLMED_Implementation.ipynb)
+I will soon upload a modularized version. Stay tuned.
 
 # TODO
 - ~Implement the custom loss function that the author used. (L = L<sub>dice</sub> + 0.1 ∗ L<sub>L2</sub> + 0.1 ∗ L<sub>KL</sub> )~ Done!
