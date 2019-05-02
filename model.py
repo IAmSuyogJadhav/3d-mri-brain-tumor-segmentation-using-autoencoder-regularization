@@ -3,18 +3,17 @@
 # by Myronenko A. (https://arxiv.org/pdf/1810.11654.pdf)
 # Author of this code: Suyog Jadhav (https://github.com/IAmSUyogJadhav)
 
-import keras
 import keras.backend as K
 from keras.losses import mse
 from keras.layers import Conv3D, Activation, Add, UpSampling3D, Lambda, Dense
 from keras.layers import Input, Reshape, Flatten, Dropout
 from keras.optimizers import adam
-from keras.models import Model, Sequential
-from group_norm import GroupNormalization
+from keras.models import Model
 try:
     from group_norm import GroupNormalization
 except ImportError:
     import urllib.request
+    print('Downloading group_norm.py in the current directory...')
     url = 'https://raw.githubusercontent.com/titu1994/Keras-Group-Normalization/master/group_norm.py'
     urllib.request.urlretrieve(url, "group_norm.py")
 
