@@ -177,12 +177,17 @@ def build_model(input_shape=(4, 160, 192, 128)):
     Creates the model used in the BRATS2018 winning solution
     by Myronenko A. (https://arxiv.org/pdf/1810.11654.pdf)
 
-    Args
-    ----
+    Parameters
+    ----------
     `input_shape`: A 4-tuple, optional.
         Shape of the input image. Must be a 4D image of shape (c, H, W, D),
         where, each of H, W and D are divisible by 2^4. Defaults to the crop
         size used in the paper, i.e., (4, 160, 192, 128).
+
+    Returns
+    -------
+    `model`: A keras.models.Model instance
+        The created model.
     """
     c, H, W, D = input_shape
     assert len(input_shape) == 4, "Input shape must be a 4-tuple"
