@@ -1,6 +1,9 @@
 # 3D MRI Brain Tumor Segmentation Using Autoencoder Regularization
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/3d-mri-brain-tumor-segmentation-using/brain-tumor-segmentation-brats-2018)](https://paperswithcode.com/sota/brain-tumor-segmentation-brats-2018?p=3d-mri-brain-tumor-segmentation-using)![https://img.shields.io/badge/Implemented%20in-Keras-red.svg](https://img.shields.io/badge/Implemented in-Keras-red.svg)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/3d-mri-brain-tumor-segmentation-using/brain-tumor-segmentation-brats-2018)](https://paperswithcode.com/sota/brain-tumor-segmentation-brats-2018?p=3d-mri-brain-tumor-segmentation-using)
+
+
+![Keras](https://img.shields.io/badge/Implemented in-Keras-red.svg)
 
 ![The model architecture](https://www.suyogjadhav.com/images/misc/brats2018_sota_model.png)
 <center><b>The Model Architecture</b><br />Source: https://arxiv.org/pdf/1810.11654.pdf</center>
