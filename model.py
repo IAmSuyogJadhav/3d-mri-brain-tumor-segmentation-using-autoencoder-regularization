@@ -16,6 +16,7 @@ except ImportError:
     print('Downloading group_norm.py in the current directory...')
     url = 'https://raw.githubusercontent.com/titu1994/Keras-Group-Normalization/master/group_norm.py'
     urllib.request.urlretrieve(url, "group_norm.py")
+    from group_norm import GroupNormalization
 
 
 def green_block(inp, filters, data_format='channels_first', name=None):
@@ -185,7 +186,7 @@ def build_model(input_shape=(4, 160, 192, 128)):
     """
     c, H, W, D = input_shape
     assert len(input_shape) == 4, "Input shape must be a 4-tuple"
-    assert H % 16 and W % 16 and D % 16, \
+    assert ~(H % 16) and ~(W % 16) and ~(D % 16), \
         "All the input dimensions must be divisible by 16"
 
     # -------------------------------------------------------------------------
