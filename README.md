@@ -1,6 +1,6 @@
 # 3D MRI Brain Tumor Segmentation Using Autoencoder Regularization
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/3d-mri-brain-tumor-segmentation-using/brain-tumor-segmentation-on-brats-2018)](https://paperswithcode.com/sota/brain-tumor-segmentation-on-brats-2018?p=3d-mri-brain-tumor-segmentation-using) 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/3d-mri-brain-tumor-segmentation-using/brain-tumor-segmentation-on-brats-2018)](https://paperswithcode.com/sota/brain-tumor-segmentation-on-brats-2018?p=3d-mri-brain-tumor-segmentation-using)
 ![Keras](https://img.shields.io/badge/Implemented%20in-Keras-red.svg)
 
 ![The model architecture](https://www.suyogjadhav.com/images/misc/brats2018_sota_model.png)
@@ -22,7 +22,10 @@ This repository contains the model complete with the loss function, all implemen
 
    It will download an additional script needed for the implementation, [`group_norm.py`](https://github.com/titu1994/Keras-Group-Normalization/blob/master/group_norm.py), which contains keras implementation for the group normalization layer.
 
-3. Make sure the input MRI scans you are going to feed have <u>channels first</u> format with height, width and depth _all_ divisible by 2<sup>4</sup>, i.e., 16. This is to ensure correct output shape according to the model.
+3. Make sure the input MRI scans you are going to feed need to have 4 dimensions, with <b>channels-first</b> format. i.e., the shape should look like (c, H, W, D), where:
+- `c`, the no.of channels are divisible by 4.
+- `H`, W`, `D`, which are height, width and depth, respectively, are _all_ divisible by 2<sup>4</sup>, i.e., 16.
+ This is to get correct output shape according to the model.
 
 4. Now to create the model, simply run:
 

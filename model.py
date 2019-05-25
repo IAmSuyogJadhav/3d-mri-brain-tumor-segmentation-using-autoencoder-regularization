@@ -181,8 +181,8 @@ def build_model(input_shape=(4, 160, 192, 128)):
     ----------
     `input_shape`: A 4-tuple, optional.
         Shape of the input image. Must be a 4D image of shape (c, H, W, D),
-        where, each of H, W and D are divisible by 2^4. Defaults to the crop
-        size used in the paper, i.e., (4, 160, 192, 128).
+        where, each of H, W and D are divisible by 2^4, and c is divisible by 4.
+        Defaults to the crop size used in the paper, i.e., (4, 160, 192, 128).
 
     Returns
     -------
@@ -191,8 +191,10 @@ def build_model(input_shape=(4, 160, 192, 128)):
     """
     c, H, W, D = input_shape
     assert len(input_shape) == 4, "Input shape must be a 4-tuple"
-    assert ~(H % 16) and ~(W % 16) and ~(D % 16), \
+    assert (c % 4) == 0, "The no. of channels must be divisible by 4"
+    assert (H % 16) == 0 and (W % 16) == 0 and (D % 16) == 0, \
         "All the input dimensions must be divisible by 16"
+
 
     # -------------------------------------------------------------------------
     # Encoder
@@ -342,9 +344,9 @@ def build_model(input_shape=(4, 160, 192, 128)):
     x = Lambda(sampling, name='Dec_VAE_VDraw_Sampling')([z_mean, z_var])
 
     ### VU Block (Upsizing back to a depth of 256)
-    x = Dense(1 * 10 * 12 * 8)(x)
+    x = Dense((c//4) * (H//16) * (W//16) * (D//16))(x)
     x = Activation('relu')(x)
-    x = Reshape((1, 10, 12, 8))(x)
+    x = Reshape(((c//4), (H//16), (W//16), (D//16)))(x)
     x = Conv3D(
         filters=256,
         kernel_size=(1, 1, 1),
