@@ -22,7 +22,7 @@ This repository contains the model complete with the loss function, all implemen
 
    It will download an additional script needed for the implementation, [`group_norm.py`](https://github.com/titu1994/Keras-Group-Normalization/blob/master/group_norm.py), which contains keras implementation for the group normalization layer.
 
-3. Make sure the input MRI scans you are going to feed need to have 4 dimensions, with <b>channels-first</b> format. i.e., the shape should look like (c, H, W, D), where:
+3. Note that the input MRI scans you are going to feed need to have 4 dimensions, with <b>channels-first</b> format. i.e., the shape should look like (c, H, W, D), where:
 - `c`, the no.of channels are divisible by 4.
 - `H`, `W`, `D`, which are height, width and depth, respectively, are _all_ divisible by 2<sup>4</sup>, i.e., 16.
  This is to get correct output shape according to the model.
