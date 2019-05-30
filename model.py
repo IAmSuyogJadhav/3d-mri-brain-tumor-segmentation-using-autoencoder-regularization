@@ -155,7 +155,9 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     loss_L2 = K.mean(K.abs(inp - out_VAE), axis=(1, 2, 3, 4))
 
     loss_KL = (1 / n) * K.sum(
-        K.square(z_mean) + z_var - K.log(z_var) - 1,
+        K.square(K.clip(z_mean, K.epsilon(), 1))
+        + K.clip(z_var, K.epsilon(), 1)
+        - K.log(K.clip(z_var, K.epsilon(), 1)) - 1,
         axis=-1
     )
 
@@ -171,9 +173,9 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     return loss_
 
 
-def build_model(input_shape=(4, 160, 192, 128)):
+def build_model(input_shape=(4, 160, 192, 128), output_channels=3):
     """
-    build_model(input_shape=(4, 160, 192, 128))
+    build_model(input_shape=(4, 160, 192, 128), output_channels=3)
     -------------------------------------------
     Creates the model used in the BRATS2018 winning solution
     by Myronenko A. (https://arxiv.org/pdf/1810.11654.pdf)
@@ -184,6 +186,8 @@ def build_model(input_shape=(4, 160, 192, 128)):
         Shape of the input image. Must be a 4D image of shape (c, H, W, D),
         where, each of H, W and D are divisible by 2^4, and c is divisible by 4.
         Defaults to the crop size used in the paper, i.e., (4, 160, 192, 128).
+    `output_channels`: An integer, optional.
+        The no. of channels in the output. Defaults to 3 (BraTS 2018 format).
 
     Returns
     -------
@@ -314,7 +318,7 @@ def build_model(input_shape=(4, 160, 192, 128)):
 
     ### Output Block
     out_GT = Conv3D(
-        filters=3,  # No. of tumor classes is 3
+        filters=output_channels,  # No. of tumor classes is 3
         kernel_size=(1, 1, 1),
         strides=1,
         data_format='channels_first',
