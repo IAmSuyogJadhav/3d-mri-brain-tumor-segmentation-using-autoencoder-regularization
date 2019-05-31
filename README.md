@@ -39,3 +39,6 @@ This repository contains the model complete with the loss function, all implemen
 # Issues
 
 If you encounter any issue or have a feedback, don't hesitate to [raise an issue](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/issues/new).
+
+# Updates
+- As suggested by [@mpslxz](https://github.com/mpslxz), I have added tanh activation function to the sampled mean and variance vectors in a [separate branch](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/tree/tanh-VAE). That code may work a little better. If you're interested, check out the branch [here](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/tree/tanh-VAE).
