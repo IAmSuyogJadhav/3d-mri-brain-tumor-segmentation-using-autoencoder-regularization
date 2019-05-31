@@ -344,8 +344,8 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3):
     x = Dense(256, name='Dec_VAE_VD_Dense')(x)
 
     ### VDraw Block (Sampling)
-    z_mean = Dense(128, name='Dec_VAE_VDraw_Mean')(x)
-    z_var = Dense(128, name='Dec_VAE_VDraw_Var')(x)
+    z_mean = Dense(128, name='Dec_VAE_VDraw_Mean', activation='tanh')(x)
+    z_var = Dense(128, name='Dec_VAE_VDraw_Var', activation='tanh')(x)
     x = Lambda(sampling, name='Dec_VAE_VDraw_Sampling')([z_mean, z_var])
 
     ### VU Block (Upsizing back to a depth of 256)
