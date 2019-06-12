@@ -155,9 +155,7 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     loss_L2 = K.mean(K.abs(inp - out_VAE), axis=(1, 2, 3, 4))
 
     loss_KL = (1 / n) * K.sum(
-        K.square(K.clip(z_mean, K.epsilon(), 1))
-        + K.clip(z_var, K.epsilon(), 1)
-        - K.log(K.clip(z_var, K.epsilon(), 1)) - 1,
+        K.exp(z_var) + K.square(z_mean) - 1. - z_var,
         axis=-1
     )
 
