@@ -42,5 +42,5 @@ If you encounter any issue or have a feedback, don't hesitate to [raise an issue
 
 # Updates
 - Thanks to [@doc78](https://github.com/doc78) , the NaN loss problem has been permanently fixed.
-- The NaN loss problem has now been fixed (clipping the actiivations for now).
+- The NaN loss problem has now been fixed (clipping the activations for now).
 - Added an argument in the `build_model` function to allow for different no. of channels in the output.
