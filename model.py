@@ -152,7 +152,7 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     n = c * H * W * D
 
     #loss_L2 = mse(inp, out_VAE)
-    loss_L2 = K.mean(K.abs(inp - out_VAE), axis=(1, 2, 3, 4))
+    loss_L2 = K.mean(K.square(inp - out_VAE), axis=(1, 2, 3, 4))
 
     loss_KL = (1 / n) * K.sum(
         K.exp(z_var) + K.square(z_mean) - 1. - z_var,
