@@ -41,6 +41,7 @@ This repository contains the model complete with the loss function, all implemen
 If you encounter any issue or have a feedback, don't hesitate to [raise an issue](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/issues/new).
 
 # Updates
+- Added a minus term before `loss_dice` in the loss function. From discussion in #7 with [@woodywff](https://github.com/woodywff) and [@doc78](https://github.com/doc78).
 - Thanks to [@doc78](https://github.com/doc78) , the NaN loss problem has been permanently fixed.
 - The NaN loss problem has now been fixed (clipping the activations for now).
 - Added an argument in the `build_model` function to allow for different no. of channels in the output.
