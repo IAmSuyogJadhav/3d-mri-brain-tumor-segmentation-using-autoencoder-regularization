@@ -166,7 +166,7 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
         loss_dice = (2. * intersection) / (
             K.sum(K.square(y_true_f), -1) + K.sum(K.square(y_pred_f), -1) + e)
 
-        return loss_dice + 0.1 * loss_L2 + 0.1 * loss_KL
+        return -loss_dice + 0.1 * loss_L2 + 0.1 * loss_KL
 
     return loss_
 
