@@ -106,16 +106,16 @@ def sampling(args):
     return z_mean + K.exp(0.5 * z_var) * epsilon
 
 
-def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
+def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8, weight_L2=0.1, weight_KL=0.1):
     """
-    loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8)
+    loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8, weight_L2=0.1, weight_KL=0.1)
     ------------------------------------------------------
     Since keras does not allow custom loss functions to have arguments
     other than the true and predicted labels, this function acts as a wrapper
     that allows us to implement the custom loss used in the paper, involving
     outputs from multiple layers.
 
-    L = L<dice> + 0.1 ∗ L<L2> + 0.1 ∗ L<KL>
+    L = - L<dice> + weight_L2 ∗ L<L2> + weight_KL ∗ L<KL>
 
     - L<dice> is the dice loss between input and segmentation output.
     - L<L2> is the L2 loss between the output of VAE part and the input.
@@ -140,6 +140,12 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     `e`: Float, optional
         A small epsilon term to add in the denominator to avoid dividing by
         zero and possible gradient explosion.
+    `weight_L2`: A real number, optional
+        The weight to be given to the L2 loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
+    `weight_KL`: A real number, optional
+        The weight to be given to the KL loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
 
     Returns
     -------
@@ -151,7 +157,7 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
     c, H, W, D = input_shape
     n = c * H * W * D
 
-    #loss_L2 = mse(inp, out_VAE)
+    #loss_L2 = mse(inp, out_VAE) 
     loss_L2 = K.mean(K.square(inp - out_VAE), axis=(1, 2, 3, 4))
 
     loss_KL = (1 / n) * K.sum(
@@ -166,14 +172,14 @@ def loss(input_shape, inp, out_VAE, z_mean, z_var, e=1e-8):
         loss_dice = (2. * intersection) / (
             K.sum(K.square(y_true_f), -1) + K.sum(K.square(y_pred_f), -1) + e)
 
-        return -loss_dice + 0.1 * loss_L2 + 0.1 * loss_KL
+        return - loss_dice + weight_L2 * loss_L2 + weight_KL * loss_KL
 
     return loss_
 
 
-def build_model(input_shape=(4, 160, 192, 128), output_channels=3):
+def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1, weight_KL=0.1):
     """
-    build_model(input_shape=(4, 160, 192, 128), output_channels=3)
+    build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1, weight_KL=0.1)
     -------------------------------------------
     Creates the model used in the BRATS2018 winning solution
     by Myronenko A. (https://arxiv.org/pdf/1810.11654.pdf)
@@ -186,6 +192,13 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3):
         Defaults to the crop size used in the paper, i.e., (4, 160, 192, 128).
     `output_channels`: An integer, optional.
         The no. of channels in the output. Defaults to 3 (BraTS 2018 format).
+    `weight_L2`: A real number, optional
+        The weight to be given to the L2 loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
+    `weight_KL`: A real number, optional
+        The weight to be given to the KL loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
+        
 
     Returns
     -------
@@ -422,7 +435,7 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3):
     model = Model(inp, out)  # Create the model
     model.compile(
         adam(lr=1e-4),
-        loss(input_shape, inp, out_VAE, z_mean, z_var),
+        loss(input_shape, inp, out_VAE, z_mean, z_var, weight_L2=weight_L2, weight_KL=weight_KL),
         metrics=['accuracy']
     )
 
