@@ -42,7 +42,7 @@ Go through the [Example_on_BRATS2018](Example_on_BRATS2018.ipynb) notebook to se
 
 You can also test-run the example on Google Colaboratory by clicking the following button.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/blob/master/Example_on_BRATS2018.ipynb")
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/blob/master/Example_on_BRATS2018.ipynb)
 
 # Issues
 
