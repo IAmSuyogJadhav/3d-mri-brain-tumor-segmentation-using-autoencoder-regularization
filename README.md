@@ -44,6 +44,8 @@ You can also test-run the example on Google Colaboratory by clicking the followi
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/blob/master/Example_on_BRATS2018.ipynb)
 
+However, note that you will need to have access to the BraTS2018 dataset before running the example on Google Colaboratory. If you already have access to the dataset, You can simply upload the dataset to Google Drive and input the dataset path in the example notebook.
+
 # Issues
 
 If you encounter any issue or have a feedback, please don't hesitate to [raise an issue](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/issues/new).
