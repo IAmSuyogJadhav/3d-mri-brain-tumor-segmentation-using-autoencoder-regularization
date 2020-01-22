@@ -119,7 +119,7 @@ def loss_gt(e=1e-8):
     Since keras does not allow custom loss functions to have arguments
     other than the true and predicted labels, this function acts as a wrapper
     that allows us to implement the custom loss used in the paper. This function
-    only calculates - L<dice> term of the following equation. (GT Decoder part)
+    only calculates - L<dice> term of the following equation. (i.e. GT Decoder part loss)
     
     L = - L<dice> + weight_L2 ∗ L<L2> + weight_KL ∗ L<KL>
     
@@ -134,6 +134,7 @@ def loss_gt(e=1e-8):
     loss_gt_(y_true, y_pred): A custom keras loss function
         This function takes as input the predicted and ground labels, uses them
         to calculate the dice loss.
+        
     """
     def loss_gt_(y_true, y_pred):
         intersection = K.sum(K.abs(y_true * y_pred), axis=[-3,-2,-1])
@@ -150,7 +151,7 @@ def loss_VAE(input_shape, z_mean, z_var, weight_L2=0.1, weight_KL=0.1):
     Since keras does not allow custom loss functions to have arguments
     other than the true and predicted labels, this function acts as a wrapper
     that allows us to implement the custom loss used in the paper. This function
-    calculates the following equation, except for -L<dice> term. (VAE Decoder part)
+    calculates the following equation, except for -L<dice> term. (i.e. VAE decoder part loss)
     
     L = - L<dice> + weight_L2 ∗ L<L2> + weight_KL ∗ L<KL>
     
@@ -195,7 +196,7 @@ def loss_VAE(input_shape, z_mean, z_var, weight_L2=0.1, weight_KL=0.1):
 
     return loss_VAE_
 
-def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1, weight_KL=0.1):
+def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1, weight_KL=0.1, dice_e=1e-8):
     """
     build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1, weight_KL=0.1)
     -------------------------------------------
@@ -216,6 +217,9 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1
     `weight_KL`: A real number, optional
         The weight to be given to the KL loss term in the loss function. Adjust to get best
         results for your task. Defaults to 0.1.
+    `dice_e`: Float, optional
+        A small epsilon term to add in the denominator of dice loss to avoid dividing by
+        zero and possible gradient explosion. This argument will be passed to loss_gt function.
 
 
     Returns
