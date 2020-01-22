@@ -51,6 +51,7 @@ However, note that you will need to have access to the BraTS2018 dataset before 
 If you encounter any issue or have a feedback, please don't hesitate to [raise an issue](https://github.com/IAmSuyogJadhav/3d-mri-brain-tumor-segmentation-using-autoencoder-regularization/issues/new).
 
 # Updates
+- Thanks to [@Crispy13](https://github.com/Crispy13), issues #29 and #24 are now fixed. VAE branch output was earlier not being included in the model's output. The current format model gives out two outputs: the segmentation map and the VAE output. The VAE branch weights were not being trained for some reason. The issue should be fixed now. Dice score calculation is slightly modified to work for any batch size. SpatialDropout3D is now used instead of Dropout, as specified in the paper.
 - Added an [example notebook](Example_on_BRATS2018.ipynb) showing how to run the model on the BraTS2018 dataset.
 - Added a minus term before `loss_dice` in the loss function. From discussion in #7 with [@woodywff](https://github.com/woodywff) and [@doc78](https://github.com/doc78).
 - Thanks to [@doc78](https://github.com/doc78) , the NaN loss problem has been permanently fixed.
