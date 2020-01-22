@@ -107,19 +107,35 @@ def sampling(args):
 
 
 def dice_coefficient(y_true, y_pred):
-    
     intersection = K.sum(K.abs(y_true * y_pred), axis=[-3,-2,-1])
     dn = K.sum(K.square(y_true) + K.square(y_pred), axis=[-3,-2,-1]) + 1e-8
     return K.mean(2 * intersection / dn, axis=[0,1])
 
 
 def loss_gt(e=1e-8):
+    """
+    loss_gt(e=1e-8)
+    ------------------------------------------------------
+    Since keras does not allow custom loss functions to have arguments
+    other than the true and predicted labels, this function acts as a wrapper
+    that allows us to implement the custom loss used in the paper. This function
+    only calculates - L<dice> term of the following equation. (GT Decoder part)
+    
+    L = - L<dice> + weight_L2 ∗ L<L2> + weight_KL ∗ L<KL>
+    
+    Parameters
+    ----------
+    `e`: Float, optional
+        A small epsilon term to add in the denominator to avoid dividing by
+        zero and possible gradient explosion.
+        
+    Returns
+    -------
+    loss_gt_(y_true, y_pred): A custom keras loss function
+        This function takes as input the predicted and ground labels, uses them
+        to calculate the dice loss.
+    """
     def loss_gt_(y_true, y_pred):
-#     y_true_t = K.constant(y_true)
-#     y_pred_t = K.constant(y_pred)
-#     y_true_t = K.reshape(y_true_t, (K.int_shape(y_true_t)[0], -1))
-#     y_pred_t = K.reshape(y_pred_t, (K.int_shape(y_pred_t)[0], -1))
-
         intersection = K.sum(K.abs(y_true * y_pred), axis=[-3,-2,-1])
         dn = K.sum(K.square(y_true) + K.square(y_pred), axis=[-3,-2,-1]) + e
         
@@ -128,12 +144,45 @@ def loss_gt(e=1e-8):
     return loss_gt_
 
 def loss_VAE(input_shape, z_mean, z_var, weight_L2=0.1, weight_KL=0.1):
+    """
+    loss_VAE(input_shape, z_mean, z_var, weight_L2=0.1, weight_KL=0.1)
+    ------------------------------------------------------
+    Since keras does not allow custom loss functions to have arguments
+    other than the true and predicted labels, this function acts as a wrapper
+    that allows us to implement the custom loss used in the paper. This function
+    calculates the following equation, except for -L<dice> term. (VAE Decoder part)
     
+    L = - L<dice> + weight_L2 ∗ L<L2> + weight_KL ∗ L<KL>
+    
+    Parameters
+    ----------
+     `input_shape`: A 4-tuple, required
+        The shape of an image as the tuple (c, H, W, D), where c is
+        the no. of channels; H, W and D is the height, width and depth of the
+        input image, respectively.
+    `z_mean`: An keras.layers.Layer instance, required
+        The vector representing values of mean for the learned distribution
+        in the VAE part. Used internally.
+    `z_var`: An keras.layers.Layer instance, required
+        The vector representing values of variance for the learned distribution
+        in the VAE part. Used internally.
+    `weight_L2`: A real number, optional
+        The weight to be given to the L2 loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
+    `weight_KL`: A real number, optional
+        The weight to be given to the KL loss term in the loss function. Adjust to get best
+        results for your task. Defaults to 0.1.
+        
+    Returns
+    -------
+    loss_VAE_(y_true, y_pred): A custom keras loss function
+        This function takes as input the predicted and ground labels, uses them
+        to calculate the L2 and KL loss.
+        
+    """
     def loss_VAE_(y_true, y_pred):
         c, H, W, D = input_shape
         n = c * H * W * D
-        
-#         print(K.shape(y_true), K.shape(y_pred))
         
         loss_L2 = K.mean(K.square(y_true - y_pred), axis=(1, 2, 3, 4)) # original axis value is (1,2,3,4).
 
