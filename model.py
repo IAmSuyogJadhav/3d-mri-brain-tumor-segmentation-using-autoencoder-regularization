@@ -7,7 +7,7 @@ import keras.backend as K
 from keras.losses import mse
 from keras.layers import Conv3D, Activation, Add, UpSampling3D, Lambda, Dense
 from keras.layers import Input, Reshape, Flatten, Dropout, SpatialDropout3D
-from keras.optimizers import adam
+from keras.optimizers import Adam
 from keras.models import Model
 try:
     from group_norm import GroupNormalization
