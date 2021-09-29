@@ -3,6 +3,8 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/3d-mri-brain-tumor-segmentation-using/brain-tumor-segmentation-on-brats-2018)](https://paperswithcode.com/sota/brain-tumor-segmentation-on-brats-2018?p=3d-mri-brain-tumor-segmentation-using)
 ![Keras](https://img.shields.io/badge/Implemented%20in-Keras-red.svg)
 
+## *[No longer under active development since 2020!]*
+
 ![The model architecture](https://www.suyogjadhav.com/images/misc/brats2018_sota_model.png)
 <center><b>The Model Architecture</b></center><br /><center>Source: https://arxiv.org/pdf/1810.11654.pdf</center>
 <br /><br />
