@@ -3,12 +3,17 @@
 # by Myronenko A. (https://arxiv.org/pdf/1810.11654.pdf)
 # Author of this code: Suyog Jadhav (https://github.com/IAmSUyogJadhav)
 
-import keras.backend as K
-from keras.losses import mse
-from keras.layers import Conv3D, Activation, Add, UpSampling3D, Lambda, Dense
-from keras.layers import Input, Reshape, Flatten, Dropout, SpatialDropout3D
-from keras.optimizers import adam
-from keras.models import Model
+import tensorflow as tf
+from tensorflow.keras.layers import Conv3D, Activation, Input, Dense, Lambda, UpSampling3D
+from tensorflow.keras.layers import Add, Flatten, Dropout, SpatialDropout3D, Reshape
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import Model
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras import metrics
+from tensorflow.keras.losses import MeanSquaredError as mse
+import tensorflow.keras.backend as K
+from tensorflow import math 
+from tensorflow.keras import initializers
 import tensorflow_addons as tfa  # use pip install -q -U tensorflow-addons==0.9.1  # for group normalization
 
 
@@ -92,17 +97,18 @@ def sampling(args):
         z (tensor): sampled latent vector
     """
     z_mean, z_var = args
-    batch = K.shape(z_mean)[0]
-    dim = K.int_shape(z_mean)[1]
+    batch = tf.shape(z_mean)[0]
+    dim = z_mean.get_shape()[1]
     # by default, random_normal has mean = 0 and std = 1.0
-    epsilon = K.random_normal(shape=(batch, dim))
-    return z_mean + K.exp(0.5 * z_var) * epsilon
+    initializer = initializers.RandomNormal(mean=0., stddev=1.)
+    epsilon = initializer(shape=(batch, dim))
+    return z_mean + math.exp(0.5 * z_var) * epsilon
 
 
 def dice_coefficient(y_true, y_pred):
-    intersection = K.sum(K.abs(y_true * y_pred), axis=[-3,-2,-1])
-    dn = K.sum(K.square(y_true) + K.square(y_pred), axis=[-3,-2,-1]) + 1e-8
-    return K.mean(2 * intersection / dn, axis=[0,1])
+    intersection = math.reduce_sum(math.abs(y_true * y_pred),axis=[-3,-2,-1])
+    dn = math.reduce_sum(math.square(y_true) + math.square(y_pred),axis=[-3,-2,-1]) + 1e-8
+    return math.reduce_mean(2 * intersection / dn, axis=[0,1])
 
 
 def loss_gt(e=1e-8):
@@ -130,10 +136,9 @@ def loss_gt(e=1e-8):
         
     """
     def loss_gt_(y_true, y_pred):
-        intersection = K.sum(K.abs(y_true * y_pred), axis=[-3,-2,-1])
-        dn = K.sum(K.square(y_true) + K.square(y_pred), axis=[-3,-2,-1]) + e
-        
-        return - K.mean(2 * intersection / dn, axis=[0,1])
+        intersection = math.reduce_sum(math.abs(y_true * y_pred),axis=[-3,-2,-1])
+        dn = math.reduce_sum(math.square(y_true) + math.square(y_pred),axis=[-3,-2,-1]) + e
+        return 1 - math.reduce_mean(2 * intersection / dn, axis=[0,1])
     
     return loss_gt_
 
@@ -177,13 +182,10 @@ def loss_VAE(input_shape, z_mean, z_var, weight_L2=0.1, weight_KL=0.1):
     def loss_VAE_(y_true, y_pred):
         c, H, W, D = input_shape
         n = c * H * W * D
-        
-        loss_L2 = K.mean(K.square(y_true - y_pred), axis=(1, 2, 3, 4)) # original axis value is (1,2,3,4).
-
-        loss_KL = (1 / n) * K.sum(
-            K.exp(z_var) + K.square(z_mean) - 1. - z_var,
-            axis=-1
-        )
+        # y_true = tf.cast(y_true, tf.float32)
+        # y_pred = tf.cast(y_pred, tf.float32)
+        loss_L2 = math.reduce_mean(math.square(y_true - y_pred), axis=(1, 2, 3, 4)) # original axis value is (1,2,3,4).
+        loss_KL =(1/n)* math.reduce_sum(math.exp(z_var) + math.square(z_mean) - 1. - z_var,axis=-1)
 
         return weight_L2 * loss_L2 + weight_KL * loss_KL
 
@@ -334,13 +336,13 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1
     x = green_block(x, 32, name='Dec_GT_32')
 
     ### Blue Block x1 (output filters=32)
-    x = Conv3D(
-        filters=32,
-        kernel_size=(3, 3, 3),
-        strides=1,
-        padding='same',
-        data_format='channels_first',
-        name='Input_Dec_GT_Output')(x)
+    #x = Conv3D(
+    #    filters=32,
+    #    kernel_size=(3, 3, 3),
+    #    strides=1,
+    #    padding='same',
+    #    data_format='channels_first',
+    #    name='Input_Dec_GT_Output')(x)
 
     ### Output Block
     out_GT = Conv3D(
