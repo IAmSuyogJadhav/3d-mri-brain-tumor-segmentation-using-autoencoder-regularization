@@ -9,14 +9,7 @@ from keras.layers import Conv3D, Activation, Add, UpSampling3D, Lambda, Dense
 from keras.layers import Input, Reshape, Flatten, Dropout, SpatialDropout3D
 from keras.optimizers import adam
 from keras.models import Model
-try:
-    from group_norm import GroupNormalization
-except ImportError:
-    import urllib.request
-    print('Downloading group_norm.py in the current directory...')
-    url = 'https://raw.githubusercontent.com/titu1994/Keras-Group-Normalization/master/group_norm.py'
-    urllib.request.urlretrieve(url, "group_norm.py")
-    from group_norm import GroupNormalization
+import tensorflow_addons as tfa  # use pip install -q -U tensorflow-addons==0.9.1  # for group normalization
 
 
 def green_block(inp, filters, data_format='channels_first', name=None):
@@ -60,7 +53,7 @@ def green_block(inp, filters, data_format='channels_first', name=None):
 
     # axis=1 for channels_first data format
     # No. of groups = 8, as given in the paper
-    x = GroupNormalization(
+    x = tfa.layers.GroupNormalization(
         groups=8,
         axis=1 if data_format == 'channels_first' else 0,
         name=f'GroupNorm_1_{name}' if name else None)(inp)
@@ -73,7 +66,7 @@ def green_block(inp, filters, data_format='channels_first', name=None):
         data_format=data_format,
         name=f'Conv3D_1_{name}' if name else None)(x)
 
-    x = GroupNormalization(
+    x = tfa.layers.GroupNormalization(
         groups=8,
         axis=1 if data_format == 'channels_first' else 0,
         name=f'GroupNorm_2_{name}' if name else None)(x)
@@ -362,7 +355,7 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1
     # -------------------------------------------------------------------------
 
     ### VD Block (Reducing dimensionality of the data)
-    x = GroupNormalization(groups=8, axis=1, name='Dec_VAE_VD_GN')(x4)
+    x = tfa.layers.GroupNormalization(groups=8, axis=1, name='Dec_VAE_VD_GN')(x4)
     x = Activation('relu', name='Dec_VAE_VD_relu')(x)
     x = Conv3D(
         filters=16,
