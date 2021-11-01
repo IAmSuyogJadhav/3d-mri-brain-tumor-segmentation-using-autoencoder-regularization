@@ -51,12 +51,12 @@ def green_block(inp, filters, data_format='channels_first', name=None):
         The output of the green block. Has no. of channels equal to `filters`.
         The size of the rest of the dimensions remains same as in `inp`.
     """
-    inp_res = Conv3D(
-        filters=filters,
-        kernel_size=(1, 1, 1),
-        strides=1,
-        data_format=data_format,
-        name=f'Res_{name}' if name else None)(inp)
+    #inp_res = Conv3D(
+    #    filters=filters,
+    #    kernel_size=(1, 1, 1),
+    #    strides=1,
+    #    data_format=data_format,
+    #    name=f'Res_{name}' if name else None)(inp)
 
     # axis=1 for channels_first data format
     # No. of groups = 8, as given in the paper
@@ -86,7 +86,7 @@ def green_block(inp, filters, data_format='channels_first', name=None):
         data_format=data_format,
         name=f'Conv3D_2_{name}' if name else None)(x)
 
-    out = Add(name=f'Out_{name}' if name else None)([x, inp_res])
+    out = Add(name=f'Out_{name}' if name else None)([x, inp])
     return out
 
 
@@ -436,13 +436,13 @@ def build_model(input_shape=(4, 160, 192, 128), output_channels=3, weight_L2=0.1
     x = green_block(x, 32, name='Dec_VAE_32')
 
     ### Blue Block x1 (output filters=32)
-    x = Conv3D(
-        filters=32,
-        kernel_size=(3, 3, 3),
-        strides=1,
-        padding='same',
-        data_format='channels_first',
-        name='Input_Dec_VAE_Output')(x)
+    #x = Conv3D(
+    #    filters=32,
+    #    kernel_size=(3, 3, 3),
+    #    strides=1,
+    #    padding='same',
+    #    data_format='channels_first',
+    #    name='Input_Dec_VAE_Output')(x)
 
     ### Output Block
     out_VAE = Conv3D(
